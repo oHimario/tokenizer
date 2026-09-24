@@ -12,15 +12,18 @@ from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from .data import CIFAR10Images
-from .image_io import save_comparison
-from .model import ImageTokenizer, TokenizerConfig
+from data import CIFAR10Images
+from image_io import save_comparison
+from model import ImageTokenizer, TokenizerConfig
+
+
+PROJECT_DIR = Path(__file__).resolve().parent
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data-dir", type=Path, default=Path("tokenizer/data"))
-    parser.add_argument("--output-dir", type=Path, default=Path("tokenizer/runs/cifar10"))
+    parser.add_argument("--data-dir", type=Path, default=PROJECT_DIR / "data")
+    parser.add_argument("--output-dir", type=Path, default=PROJECT_DIR / "runs" / "cifar10")
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--learning-rate", type=float, default=2e-4)

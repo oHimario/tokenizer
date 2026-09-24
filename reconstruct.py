@@ -6,9 +6,12 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from .data import CIFAR10Images
-from .image_io import image_to_tensor, save_comparison, tensor_to_image
-from .model import ImageTokenizer, TokenizerConfig
+from data import CIFAR10Images
+from image_io import image_to_tensor, save_comparison, tensor_to_image
+from model import ImageTokenizer, TokenizerConfig
+
+
+PROJECT_DIR = Path(__file__).resolve().parent
 
 
 def main() -> None:
@@ -16,8 +19,8 @@ def main() -> None:
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--image", type=Path, help="Path to a custom image; resized to the training resolution")
     parser.add_argument("--cifar-index", type=int, default=0, help="Test split image index, used if --image is absent")
-    parser.add_argument("--data-dir", type=Path, default=Path("tokenizer/data"))
-    parser.add_argument("--output-dir", type=Path, default=Path("tokenizer/outputs"))
+    parser.add_argument("--data-dir", type=Path, default=PROJECT_DIR / "data")
+    parser.add_argument("--output-dir", type=Path, default=PROJECT_DIR / "outputs")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     args = parser.parse_args()
 
