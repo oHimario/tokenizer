@@ -10,6 +10,7 @@
 tokenizer/
 ├── train.py          # 训练入口
 ├── reconstruct.py    # token 编码与图像重建入口
+├── test_tokens.py    # 输出单张图像的离散 token ID
 ├── model.py          # 编码器、码本和解码器
 ├── data.py           # CIFAR-10 数据读取
 ├── image_io.py       # 图像输入输出
@@ -41,6 +42,15 @@ python reconstruct.py --checkpoint runs/cifar10/best.pt --cifar-index 0
 - `tokens.npy`：8×8 的整数 token ID，范围为 0～511。
 - `original.png`、`reconstruction.png`：原图和重建图。
 - `comparison.png`：上下排列的对比图。
+
+只查看一张图像编码出的离散 token（默认使用 `runs/cifar10/best.pt`）：
+
+```powershell
+python test_tokens.py --data-dir "E:\py_Prjs\Datasets\CIFAR-10" --cifar-index 0
+python test_tokens.py --image path/to/image.png --save-npy outputs/tokens.npy
+```
+
+脚本会在终端打印完整的 token ID 网格；`--save-npy` 可选，不指定就不会写文件。它只做编码，不训练模型，也不进行图像重建。
 
 也可以传入任意图片：
 
