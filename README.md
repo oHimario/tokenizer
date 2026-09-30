@@ -4,8 +4,6 @@
 
 模型沿用原项目的残差块、GroupNorm、SiLU、平均池化下采样、最近邻上采样和最近邻向量量化思路。CIFAR-10 图像只有 32×32，因此默认使用两次下采样，得到 **8×8 个 token**，码本大小为 512。当前训练目标是图像 L1 损失加 VQ 的码本与 commitment 损失；没有加入原 VQGAN 的感知损失和判别器，因此这是可训练的 VQ tokenizer 基线，不等于原论文的完整 VQGAN 训练复现。
 
-`tokenizer` 与 `maskgit` 同级，是可直接运行的脚本工程，不需要作为 Python 包安装或使用 `python -m tokenizer...`。目录结构如下：
-
 ```text
 tokenizer/
 ├── train.py          # 训练入口
@@ -24,14 +22,12 @@ tokenizer/
 ```powershell
 cd E:\py_Prjs\maskgit-main\tokenizer
 conda activate maskgit-tokenizer
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 python train.py --epochs 30 --batch-size 128
 python reconstruct.py --checkpoint runs/cifar10/best.pt --cifar-index 0
 ```
 
-训练命令首次运行时会从[数据集官网](https://www.cs.toronto.edu/~kriz/cifar.html)下载 CIFAR-10 二进制包（约 162 MB），核对 MD5 后直接读取压缩包。如果已有官方 `cifar-10-binary.tar.gz` 或 `cifar-10-python.tar.gz`，可以放进 `data/`，或者通过 `--data-dir` 指定所在目录。默认数据与结果目录以 `tokenizer` 为基准，不依赖启动命令时的工作目录。训练集 50,000 张，测试集 10,000 张；标签不会用于训练。
-
-当前机器已经有 `E:\py_Prjs\Datasets\CIFAR-10\cifar-10-python.tar.gz`。在这里运行时，可在训练和重建命令中都加入 `--data-dir "E:\py_Prjs\Datasets\CIFAR-10"`，无需重新下载。
+训练命令首次运行时会从[数据集官网](https://www.cs.toronto.edu/~kriz/cifar.html)下载 CIFAR-10 二进制包（约 162 MB），核对 MD5 后直接读取压缩包。如果已有官方 `cifar-10-binary.tar.gz` 或 `cifar-10-python.tar.gz`，可以放进 `data/`，或者通过 `--data-dir` 指定所在目录（如`--data-dir "E:\py_Prjs\Datasets\CIFAR-10"`）。默认数据与结果目录以 `tokenizer` 为基准，不依赖启动命令时的工作目录。训练集 50,000 张，测试集 10,000 张；标签不会用于训练。
 
 每轮训练在 `runs/cifar10` 保存 `last.pt`、验证损失最好的 `best.pt`，以及 `reconstruction_epoch_XXX.png`。对比图上排是原图，下排是重建图。终端还会输出重建误差、PSNR、码本使用率与困惑度。`--resume runs/cifar10/last.pt --epochs 60` 可续训到第 60 轮。
 

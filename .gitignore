@@ -4,3 +4,4 @@ outputs/
 .vscode/
 __pycache__/
 test.py
+debug.log
